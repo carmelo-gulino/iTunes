@@ -13,8 +13,12 @@ class View(ft.UserControl):
         self._controller = None
         # graphical elements
         self._title = None
-        self.txt_name = None
-        self.btn_hello = None
+        self.dd_album = None
+        self.btn_crea_grafo = None
+        self.txt_in_durata = None
+        self.btn_analisi_comp = None
+        self.btn_set_album = None
+        self.txt_in_soglia = None
         self.txt_result = None
         self.txt_container = None
 
@@ -23,19 +27,30 @@ class View(ft.UserControl):
         self._title = ft.Text("Hello World", color="blue", size=24)
         self._page.controls.append(self._title)
 
-        #ROW with some controls
-        # text field for the name
-        self.txt_name = ft.TextField(
-            label="name",
-            width=200,
-            hint_text="Insert a your name"
-        )
-
-        # button for the "hello" reply
-        self.btn_hello = ft.ElevatedButton(text="Hello", on_click=self._controller.handle_hello)
-        row1 = ft.Row([self.txt_name, self.btn_hello],
+        # ROW 1
+        self.txt_in_durata = ft.TextField(label="Duarata")
+        self.btn_crea_grafo = ft.ElevatedButton(text="Crea grafo", on_click=self._controller.handle_crea_grafo)
+        row1 = ft.Row([ft.Container(self.txt_in_durata, width=300),
+                       ft.Container(self.btn_crea_grafo, width=300)],
                       alignment=ft.MainAxisAlignment.CENTER)
         self._page.controls.append(row1)
+
+        # ROW 2
+        self.dd_album = ft.Dropdown(label="Album", on_change=self._controller.get_selected_album)
+        self.btn_analisi_comp = ft.ElevatedButton(text="Analisi componente",
+                                                  on_click=self._controller.handle_analisi_componente)
+        row2 = ft.Row([ft.Container(self.dd_album, width=300),
+                       ft.Container(self.btn_analisi_comp, width=300)],
+                      alignment=ft.MainAxisAlignment.CENTER)
+        self._page.controls.append(row2)
+
+        # ROW 3
+        self.txt_in_soglia = ft.TextField(label="Soglia")
+        self.btn_set_album = ft.ElevatedButton(text="Set di album", on_click=self._controller.handle_set_album)
+        row3 = ft.Row([ft.Container(self.txt_in_soglia, width=300),
+                       ft.Container(self.btn_set_album, width=300)],
+                      alignment=ft.MainAxisAlignment.CENTER)
+        self._page.controls.append(row3)
 
         # List View where the reply is printed
         self.txt_result = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=True)
