@@ -16,18 +16,13 @@ class Controller:
             tot_d_int = int(self._view.txt_in_durata.value)
         except ValueError:
             self._view.create_alert("Inserire un numero intero")
-            '''warnings.warn_explicit(message="Inserire un intero",
-                                   category=TypeError,
-                                   filename="controller.py",
-                                   lineno=15)'''
             return
         self._model.build_graph(tot_d_int)
         nodes = self._model.get_nodes()
         self._view.dd_album.options.clear()
         for n in nodes:
             try:
-                self._view.dd_album.options.append(ft.dropdown.Option(data=n,
-                                                                      text=n.Title))
+                self._view.dd_album.options.append(ft.dropdown.Option(data=n, text=n.Title))
             except AttributeError:
                 print("******")
         self._view.txt_result.controls.clear()
@@ -42,7 +37,7 @@ class Controller:
         else:
             self.chosen_album = e.control.data
 
-    def handle_analisi_componente(self):
+    def handle_analisi_componente(self, e):
         if self.chosen_album is None:
             self._view.create_alert("Selezionare un album")
             return
@@ -51,6 +46,19 @@ class Controller:
         self._view.txt_result.controls.append(ft.Text(f"La componente connessa che contiene {self.chosen_album} "
                                                       f"contiene {size_c} album e ha una durata di {tot_d} minuti."))
 
-
-    def handle_set_album(self):
-        pass
+    def handle_set_album(self, e):
+        d_tot_txt = self._view.txt_in_soglia.value
+        try:
+            d_tot = int(d_tot_txt)
+        except ValueError:
+            self._view.create_alert("Inserire un numero intero")
+            return
+        if self.chosen_album is None:
+            self._view.create_alert("Selezionare un album")
+            return
+        best_set = self._model.get_set_album(self.chosen_album, d_tot)
+        self._view.txt_result.controls.clear()
+        self._view.txt_result.controls.append(ft.Text(f"Set di album trovato: "))
+        for a in best_set:
+            self._view.txt_result.controls.append(ft.Text(a))
+        self._view.update_page()
